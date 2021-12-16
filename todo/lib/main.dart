@@ -16,10 +16,11 @@ class TodoApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Todo App',
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: Colors.pink,
         primaryColor: Colors.blueGrey[100],
       ),
       home: const HomeView(),
     );
   }
 }
+   

@@ -23,7 +23,7 @@ class TodoService {
     Map<String, String> header = {'Content-Type': 'application/json'};
 
     return await post(
-        Uri.parse("http://todo-backend-service.herokuapp.com/todo"),
+        Uri.parse("https://charles-todo-app.herokuapp.com/todo"),
         body: jsonEncode(body),
         headers: header);
   }
@@ -31,6 +31,6 @@ class TodoService {
   //delete a todo
   Future<Response> deleteTodoRequest(String id) async {
     return await delete(
-        Uri.parse("http://todo-backend-service.herokuapp.com/todo/$id"));
+        Uri.parse("https://charles-todo-app.herokuapp.com/todo/$id"));
   }
 }

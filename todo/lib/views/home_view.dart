@@ -17,6 +17,13 @@ class _HomeViewState extends State<HomeView> {
   final TodoController _todoController = TodoController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    _todoController.getAllTodos();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(249, 250, 255, 1),
@@ -141,7 +148,7 @@ class _HomeViewState extends State<HomeView> {
           children: [
             const PaddingWithText(
                 padding: EdgeInsets.all(18),
-                text: "What's up,Asante!",
+                text: "What's up,Ewudzie!",
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(34, 45, 87, 1)),
@@ -196,36 +203,39 @@ class _HomeViewState extends State<HomeView> {
                   }
 
                   Todo? todo = snapshot.data as Todo;
-                  return ListView.separated(
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          height: 80,
-                          child: Card(
-                            elevation: 0,
-                            child: Row(
-                              children: [
-                                const Radio(
-                                  value: '',
-                                  groupValue: '',
-                                  onChanged: null,
-                                  activeColor: Colors.pink,
-                                ),
-                                Text(
-                                  todo.data![index].todoTitle!,
-                                  style: const TextStyle(
-                                      //decoration: TextDecoration.lineThrough,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.80,
+                    child: ListView.separated(
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (BuildContext context, int index) {
+                          return SizedBox(
+                            height: 80,
+                            child: Card(
+                              elevation: 0,
+                              child: Row(
+                                children: [
+                                  const Radio(
+                                    value: '',
+                                    groupValue: '',
+                                    onChanged: null,
+                                    activeColor: Colors.pink,
+                                  ),
+                                  Text(
+                                    todo.data![index].todoTitle!,
+                                    style: const TextStyle(
+                                        //decoration: TextDecoration.lineThrough,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const SizedBox(height: 5),
-                      itemCount: todo.data!.length); //Pass the lenght here
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const SizedBox(height: 5),
+                        itemCount: todo.data!.length),
+                  ); //Pass the lenght here
                 }),
           ],
         ),
@@ -389,7 +399,7 @@ class CardCategory extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: LinearPercentIndicator(
-                    width: MediaQuery.of(context).size.width * 0.32,
+                    width: MediaQuery.of(context).size.width * 0.30,
                     lineHeight: 4.0,
                     percent: completionLevel!,
                     progressColor: indicatorColor,
