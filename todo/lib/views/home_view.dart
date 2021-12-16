@@ -1,73 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:todo/controller/todo_controller.dart';
+import 'package:todo/models/todo_model.dart';
 import 'package:todo/views/create_todo_view.dart';
-
 import 'custom_widgets/padding_with_text.dart';
 import 'custom_widgets/search_delegate.dart';
 
-
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final TodoController _todoController = TodoController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(249, 250, 255, 1),
-      // drawer: Drawer(
-      //   elevation: 0,
-      //   child: Container(
-      //     color: const Color.fromRGBO(14, 31, 85, 1),
-      //     child: Column(
-      //       children: [
-      //         Container(
-      //           alignment: Alignment.centerRight,
-      //           margin: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-      //           child: SizedBox(
-      //             height: 55,
-      //             width: 57,
-      //             child: InkWell(
-      //               onTap: () {
-      //                 Navigator.of(context).pop();
-      //               },
-      //               child: const Card(
-      //                 color: Color.fromRGBO(14, 31, 85, 1),
-      //                 shape: CircleBorder(
-      //                   side: BorderSide(
-      //                     color: Colors.white,
-      //                     width: 2,
-      //                   ),
-      //                 ),
-      //                 child: Icon(
-      //                   Icons.arrow_back_ios,
-      //                   color: Colors.white,
-      //                   size: 24,
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //         const SizedBox(
-      //           width: 120,
-      //           height: 120,
-      //           child: Card(
-      //             elevation: 0,
-      //             shape: CircleBorder(
-      //               side: BorderSide(
-      //                 color: Colors.pinkAccent,
-      //                 width: 3,
-      //               ),
-      //             ),
-      //             child: CircleAvatar(
-      //               backgroundColor: Colors.white,
-      //               radius: 50,
-      //               backgroundImage: AssetImage('assets/images/user.jpeg'),
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
       drawer: Drawer(
         child: Container(
           color: const Color.fromRGBO(14, 31, 85, 1),
@@ -110,7 +62,7 @@ class HomeView extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.only(top: 40),
-                child: const Text('Charles \nEwudzie',
+                child: const Text('Asante \nUsman',
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
@@ -165,7 +117,6 @@ class HomeView extends StatelessWidget {
           ),
         ),
       ),
-
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(249, 250, 255, 1),
         elevation: 0,
@@ -190,7 +141,7 @@ class HomeView extends StatelessWidget {
           children: [
             const PaddingWithText(
                 padding: EdgeInsets.all(18),
-                text: "What's up,Charles!",
+                text: "What's up,Asante!",
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(34, 45, 87, 1)),
@@ -229,83 +180,53 @@ class HomeView extends StatelessWidget {
                 ),
               ),
             ),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
-              ),
-              child: ListView.separated(
-                  itemBuilder: (BuildContext context, int index) {
-                    return Dismissible(
-                      key: Key(index.toString()),
-                      secondaryBackground: const Material(
-                        color: Colors.red,
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                      background: const Material(
-                        color: Colors.green,
-                        child: Icon(
-                          Icons.check_circle,
-                          color: Colors.white,
-                        ),
-                      ),
-                      onDismissed: (dismissedDirection) {
-                        SnackBar snackBar = const SnackBar(
-                          content: Text('Todo has been deleted!',
-                              style: TextStyle(
-                                color: Colors.green,
-                              )),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      },
-                      child: SizedBox(
-                        height: 80,
-                        child: Card(
-                          elevation: 0,
-                          child: Row(
-                            children: const [
-                              Radio(
-                                value: '',
-                                groupValue: '',
-                                onChanged: null,
-                                activeColor: Colors.pink,
-                              ),
-                              Text(
-                                'Have a date with Sandra',
-                                style: TextStyle(
-                                    //decoration: TextDecoration.lineThrough,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+            FutureBuilder(
+                future: _todoController.getAllTodos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      snapshot.data == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.data == null) {
+                    return const Text(
+                      'Something went wrong',
+                      style: TextStyle(fontSize: 30),
                     );
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const SizedBox(height: 5),
-                  itemCount: 15),
-            ),
+                  }
 
-            // ConstrainedBox(
-            //     constraints: BoxConstraints(
-            //         maxHeight: MediaQuery.of(context).size.height),
-            //     // child: ListView.builder(
-            //     //   itemCount: 20,
-            //     //   itemBuilder: (context, index) => const Tasks(),
-            //     // ),
-            //     child: ListView.separated(
-            //         itemBuilder: (BuildContext context, int index) {
-            //           return const Tasks();
-            //         },
-            //         separatorBuilder: (BuildContext context, int index) =>
-            //             const SizedBox(
-            //               height: 10,
-            //             ),
-            //         itemCount: 20)),
+                  Todo? todo = snapshot.data as Todo;
+                  return ListView.separated(
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        return SizedBox(
+                          height: 80,
+                          child: Card(
+                            elevation: 0,
+                            child: Row(
+                              children: [
+                                const Radio(
+                                  value: '',
+                                  groupValue: '',
+                                  onChanged: null,
+                                  activeColor: Colors.pink,
+                                ),
+                                Text(
+                                  todo.data![index].todoTitle!,
+                                  style: const TextStyle(
+                                      //decoration: TextDecoration.lineThrough,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const SizedBox(height: 5),
+                      itemCount: todo.data!.length); //Pass the lenght here
+                }),
           ],
         ),
       ),
@@ -320,21 +241,77 @@ class HomeView extends StatelessWidget {
           size: 28,
         ),
       ),
-
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: const Color.fromRGBO(26, 106, 237, 1),
-      //   onPressed: () {
-      //     Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //         builder: (context) => const CreateTodoView(),
-      //       ),
-      //     );
-      //   },
-      //   child: const Icon(Icons.add, size: 30),
-      // ),
     );
   }
 }
+
+// class TodoTileWidget extends StatelessWidget {
+//   final Datum? todo;
+//   const TodoTileWidget({
+//     this.todo,
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.separated(
+//         itemBuilder: (BuildContext context, int index) {
+//           return Dismissible(
+//             key: Key(index.toString()),
+//             secondaryBackground: const Material(
+//               color: Colors.red,
+//               child: Icon(
+//                 Icons.delete,
+//                 color: Colors.white,
+//               ),
+//             ),
+//             background: const Material(
+//               color: Colors.green,
+//               child: Icon(
+//                 Icons.check_circle,
+//                 color: Colors.white,
+//               ),
+//             ),
+//             onDismissed: (dismissedDirection) {
+//               SnackBar snackBar = const SnackBar(
+//                 content: Text('Todo has been deleted!',
+//                     style: TextStyle(
+//                       color: Colors.green,
+//                     )),
+//               );
+//               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//             },
+//             child: SizedBox(
+//               height: 80,
+//               child: Card(
+//                 elevation: 0,
+//                 child: Row(
+//                   children: [
+//                     const Radio(
+//                       value: '',
+//                       groupValue: '',
+//                       onChanged: null,
+//                       activeColor: Colors.pink,
+//                     ),
+//                     Text(
+//                       // todo.todoTitle!,
+//                       todo!.todoTitle.toString(),
+//                       style: const TextStyle(
+//                           //decoration: TextDecoration.lineThrough,
+//                           fontSize: 16,
+//                           fontWeight: FontWeight.w400),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           );
+//         },
+//         separatorBuilder: (BuildContext context, int index) =>
+//             const SizedBox(height: 5),
+//         itemCount: 4);
+//   }
+// }
 
 class RowWithIconAndText extends StatelessWidget {
   final IconData? icon;
